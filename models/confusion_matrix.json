@@ -1,0 +1,25 @@
+{
+  "model": "Logistic Regression",
+  "classes": [
+    "Healthy",
+    "Warning",
+    "Critical"
+  ],
+  "matrix": [
+    [
+      20,
+      0,
+      0
+    ],
+    [
+      0,
+      13,
+      0
+    ],
+    [
+      0,
+      0,
+      7
+    ]
+  ]
+}

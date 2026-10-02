@@ -1,0 +1,53 @@
+# ─── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# ─── Node / Vite ──────────────────────────────────────────
+node_modules/
+dist/
+.vite/
+*.local
+
+# ─── ML Artifacts (large binary files) ───────────────────
+# Comment these out if you want to commit the trained model
+models/*.pkl
+models/confusion_matrix.png
+
+# Keep metrics JSON (small, useful for readers)
+!models/metrics.json
+
+# ─── Data (large Excel file) ──────────────────────────────
+# Comment out if you want to include the dataset
+# data/
+
+# ─── OS / Editor ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.suo
+*.user
+
+# ─── Logs ─────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Misc ─────────────────────────────────────────────────
+.env.local
+.env.production
+settings.py
