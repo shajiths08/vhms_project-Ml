@@ -21,19 +21,26 @@ PREPROCESSOR_PATH = os.path.join(BASE_DIR, "models", "preprocessor.pkl")
 _model = None
 _preprocessor = None
 
-def get_artifacts():
+def get_artifacts(force_retrain=False):
     global _model, _preprocessor
-    if _model is None or _preprocessor is None:
-        if not os.path.exists(MODEL_PATH) or not os.path.exists(PREPROCESSOR_PATH):
+    if _model is None or _preprocessor is None or force_retrain:
+        need_train = force_retrain or not os.path.exists(MODEL_PATH) or not os.path.exists(PREPROCESSOR_PATH)
+        if not need_train:
             try:
-                from ml.train import train_models
-                train_models()
-            except Exception as e:
-                raise FileNotFoundError(
-                    f"Model or preprocessor artifact not found in models/ and auto-train failed: {e}"
-                )
-        _model = joblib.load(MODEL_PATH)
-        _preprocessor = joblib.load(PREPROCESSOR_PATH)
+                _model = joblib.load(MODEL_PATH)
+                _preprocessor = joblib.load(PREPROCESSOR_PATH)
+                # Verify that the loaded preprocessor is fully compatible with the active scikit-learn version
+                test_df = pd.DataFrame([DEFAULT_PARAMETERS])[ALL_CLEAN_FEATURES]
+                _preprocessor.transform(test_df)
+            except Exception:
+                need_train = True
+
+        if need_train:
+            from ml.train import train_models
+            train_models()
+            _model = joblib.load(MODEL_PATH)
+            _preprocessor = joblib.load(PREPROCESSOR_PATH)
+
     return _model, _preprocessor
 
 # Default baseline parameters for any missing optional field
@@ -112,8 +119,12 @@ def predict_vehicle_health(params: dict) -> dict:
     # Construct single-row DataFrame
     input_df = pd.DataFrame([clean_params])[ALL_CLEAN_FEATURES]
     
-    # Preprocess
-    transformed = preprocessor.transform(input_df)
+    # Preprocess with auto-retrain fallback on attribute error
+    try:
+        transformed = preprocessor.transform(input_df)
+    except Exception:
+        model, preprocessor = get_artifacts(force_retrain=True)
+        transformed = preprocessor.transform(input_df)
     
     # Predict
     pred_class = model.predict(transformed)[0]

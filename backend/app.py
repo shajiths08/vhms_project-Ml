@@ -25,6 +25,13 @@ except ImportError:
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
 
+# Warm up / verify ML pipeline compatibility on startup
+try:
+    get_artifacts()
+    print("[OK] Model and preprocessor loaded and verified.")
+except Exception as _e:
+    print(f"[WARN] Warmup retrain: {_e}")
+
 # Presets for 1-click evaluation
 SAMPLE_PRESETS = {
     "healthy": {
