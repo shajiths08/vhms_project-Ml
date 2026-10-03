@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../config';
 import { 
   Wrench, 
   Calendar, 
@@ -23,7 +24,7 @@ export default function Maintenance() {
   useEffect(() => {
     async function loadData() {
       try {
-        const res = await fetch('/api/fleet/vehicles');
+        const res = await fetch(`${API_BASE}/api/fleet/vehicles`);
         if (res.ok) {
           const data = await res.json();
           if (data.success) {

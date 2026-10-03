@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../config';
 import { 
   Network, 
   Cpu, 
@@ -28,7 +29,7 @@ export default function FederatedLearning() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/federated/simulation');
+      const res = await fetch(`${API_BASE}/api/federated/simulation`);
       if (!res.ok) throw new Error('Failed to run federated learning simulation.');
       const data = await res.json();
       if (!data.success) throw new Error(data.error || 'Simulation error');

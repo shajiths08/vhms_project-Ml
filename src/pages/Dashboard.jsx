@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import API_BASE from '../config';
 import {
   Car, Activity, Thermometer, Battery, Gauge, Wrench,
   ShieldCheck, AlertCircle, AlertTriangle, CheckCircle2,
@@ -498,7 +499,7 @@ export default function Dashboard() {
     setError(null);
     setVehicleInfo({ vehicleId: preset.vehicleId, fleetId: preset.fleetId });
     try {
-      const res = await fetch('/api/predict', {
+      const res = await fetch(`${API_BASE}/api/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(preset.params)
@@ -518,7 +519,7 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`/api/fleet/vehicle/${vId}`);
+      const res = await fetch(`${API_BASE}/api/fleet/vehicle/${vId}`);
       if (!res.ok) throw new Error(`Vehicle ${vId} not found in fleet database`);
       const data = await res.json();
       if (!data.success || !data.vehicle) throw new Error(data.error || 'Failed to fetch vehicle');

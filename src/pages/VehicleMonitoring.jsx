@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../config';
 import { 
   Car, 
   Activity, 
@@ -167,7 +168,7 @@ export default function VehicleMonitoring() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/predict', {
+      const response = await fetch(`${API_BASE}/api/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params)

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import API_BASE from '../config';
 import { 
   FileText, 
   Printer, 
@@ -54,7 +55,7 @@ export default function Reports() {
   useEffect(() => {
     async function loadVehicles() {
       try {
-        const res = await fetch('/api/fleet/vehicles');
+        const res = await fetch(`${API_BASE}/api/fleet/vehicles`);
         if (!res.ok) throw new Error('Could not load vehicles list');
         const data = await res.json();
         if (data.success) {
@@ -78,7 +79,7 @@ export default function Reports() {
       setReportLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/fleet/vehicle/${selectedVehicleId}`);
+        const res = await fetch(`${API_BASE}/api/fleet/vehicle/${selectedVehicleId}`);
         if (!res.ok) throw new Error(`Vehicle ${selectedVehicleId} not found`);
         const data = await res.json();
         if (data.success && data.vehicle) {

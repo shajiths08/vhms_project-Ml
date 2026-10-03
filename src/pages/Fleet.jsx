@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import API_BASE from '../config';
 import { 
   Truck, 
   Search, 
@@ -56,8 +57,8 @@ export default function Fleet() {
     setError(null);
     try {
       const [sumRes, vehRes] = await Promise.all([
-        fetch('/api/fleet/summary'),
-        fetch('/api/fleet/vehicles')
+        fetch(`${API_BASE}/api/fleet/summary`),
+        fetch(`${API_BASE}/api/fleet/vehicles`)
       ]);
 
       if (!sumRes.ok || !vehRes.ok) {
