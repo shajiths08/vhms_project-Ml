@@ -25,9 +25,13 @@ def get_artifacts():
     global _model, _preprocessor
     if _model is None or _preprocessor is None:
         if not os.path.exists(MODEL_PATH) or not os.path.exists(PREPROCESSOR_PATH):
-            raise FileNotFoundError(
-                f"Model or preprocessor artifact not found in models/. Please run ml/train.py first."
-            )
+            try:
+                from ml.train import train_models
+                train_models()
+            except Exception as e:
+                raise FileNotFoundError(
+                    f"Model or preprocessor artifact not found in models/ and auto-train failed: {e}"
+                )
         _model = joblib.load(MODEL_PATH)
         _preprocessor = joblib.load(PREPROCESSOR_PATH)
     return _model, _preprocessor

@@ -21,12 +21,10 @@ dist/
 .vite/
 *.local
 
-# ─── ML Artifacts (large binary files) ───────────────────
-# Comment these out if you want to commit the trained model
-models/*.pkl
+# ─── ML Artifacts ─────────────────────────────────────────
+# Keep model artifacts committed for deployment
+!models/*.pkl
 models/confusion_matrix.png
-
-# Keep metrics JSON (small, useful for readers)
 !models/metrics.json
 
 # ─── Data (large Excel file) ──────────────────────────────
