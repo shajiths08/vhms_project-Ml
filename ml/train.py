@@ -9,10 +9,14 @@ import json
 import joblib
 import pandas as pd
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend
-import matplotlib.pyplot as plt
-import seaborn as sns
+try:
+    import matplotlib
+    matplotlib.use('Agg')  # Non-interactive backend
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    _HAS_PLOT = True
+except ImportError:
+    _HAS_PLOT = False
 
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -151,17 +155,20 @@ def train_and_evaluate(data_path="data/Fleet_Vehicle_Health_Dataset_V001_to_V200
     with open("models/confusion_matrix.json", "w") as f:
         json.dump(cm_data, f, indent=2)
 
-    # Generate and save visual confusion matrix plot
-    plt.figure(figsize=(7, 6))
-    cm_arr = np.array(best_metrics["confusion_matrix"])
-    sns.heatmap(cm_arr, annot=True, fmt="d", cmap="Blues",
-                xticklabels=classes, yticklabels=classes, cbar=False)
-    plt.title(f"Confusion Matrix — {best_name} (Test Set)", fontsize=13, pad=12)
-    plt.xlabel("Predicted Health Status", fontsize=11)
-    plt.ylabel("Actual Health Status", fontsize=11)
-    plt.tight_layout()
-    plt.savefig("models/confusion_matrix.png", dpi=200)
-    plt.close()
+    # Generate and save visual confusion matrix plot (only if matplotlib is available)
+    if _HAS_PLOT:
+        plt.figure(figsize=(7, 6))
+        cm_arr = np.array(best_metrics["confusion_matrix"])
+        sns.heatmap(cm_arr, annot=True, fmt="d", cmap="Blues",
+                    xticklabels=classes, yticklabels=classes, cbar=False)
+        plt.title(f"Confusion Matrix — {best_name} (Test Set)", fontsize=13, pad=12)
+        plt.xlabel("Predicted Health Status", fontsize=11)
+        plt.ylabel("Actual Health Status", fontsize=11)
+        plt.tight_layout()
+        plt.savefig("models/confusion_matrix.png", dpi=200)
+        plt.close()
+    else:
+        print("  (Skipping confusion matrix PNG - matplotlib not available)")
 
     print("\nSaved Artifacts:")
     print("  -> models/model.pkl")
@@ -172,6 +179,9 @@ def train_and_evaluate(data_path="data/Fleet_Vehicle_Health_Dataset_V001_to_V200
     print("=" * 65)
 
     return metrics_summary
+
+# Alias so ml/predict.py can call train_models()
+train_models = train_and_evaluate
 
 if __name__ == "__main__":
     train_and_evaluate()
