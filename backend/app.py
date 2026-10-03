@@ -98,6 +98,16 @@ SAMPLE_PRESETS = {
     }
 }
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root status endpoint to verify backend is running."""
+    return jsonify({
+        "status": "online",
+        "service": "VHM AI Prediction Engine API",
+        "version": "2.0.0",
+        "health_check": "/api/health"
+    })
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Service health endpoint."""
